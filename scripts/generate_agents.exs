@@ -39,7 +39,7 @@ defmodule AgentGenerator do
       name: "#{Enum.random(toko_names())}",
       phone_number: generate_phone(),
       subdistrict_name: subdistrict["subdistrict_name"],
-      subdistrict_id: subdistrict["id"],
+      subdistrict_id: subdistrict["subdistrict_id"],
       city: subdistrict["city"],
       city_id: subdistrict["city_id"],
       province: subdistrict["province"],
