@@ -8,6 +8,9 @@ defmodule FetchSubdistricts do
     # Start HTTPoison
     {:ok, _} = Application.ensure_all_started(:httpoison)
 
+    # Create data directory if it doesn't exist
+    File.mkdir_p!("data")
+
     # First, get all cities
     case WilayahElixir.RajaOngkir.get_all_cities() do
       {:ok, cities_response} ->
@@ -32,8 +35,8 @@ defmodule FetchSubdistricts do
 
         # Save to file
         json = Jason.encode!(subdistricts, pretty: true)
-        File.write!("subdistricts.json", json)
-        Logger.info("Successfully saved #{length(subdistricts)} subdistricts to subdistricts.json")
+        File.write!("data/subdistricts.json", json)
+        Logger.info("Successfully saved #{length(subdistricts)} subdistricts to data/subdistricts.json")
 
       {:error, reason} ->
         Logger.error("Failed to fetch cities: #{inspect(reason)}")

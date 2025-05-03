@@ -8,13 +8,16 @@ defmodule FetchProvinces do
     # Start HTTPoison
     {:ok, _} = Application.ensure_all_started(:httpoison)
 
+    # Create data directory if it doesn't exist
+    File.mkdir_p!("data")
+
     case WilayahElixir.RajaOngkir.get_provinces() do
       {:ok, response} ->
         provinces = response["rajaongkir"]["results"]
         json = Jason.encode!(provinces, pretty: true)
 
-        File.write!("provinces.json", json)
-        Logger.info("Successfully saved #{length(provinces)} provinces to provinces.json")
+        File.write!("data/provinces.json", json)
+        Logger.info("Successfully saved #{length(provinces)} provinces to data/provinces.json")
 
       {:error, reason} ->
         Logger.error("Failed to fetch provinces: #{inspect(reason)}")

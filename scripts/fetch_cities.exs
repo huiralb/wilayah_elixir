@@ -8,13 +8,16 @@ defmodule FetchCities do
     # Start HTTPoison
     {:ok, _} = Application.ensure_all_started(:httpoison)
 
+    # Create data directory if it doesn't exist
+    File.mkdir_p!("data")
+
     case WilayahElixir.RajaOngkir.get_all_cities() do
       {:ok, response} ->
         cities = response["rajaongkir"]["results"]
         json = Jason.encode!(cities, pretty: true)
 
-        File.write!("cities.json", json)
-        Logger.info("Successfully saved #{length(cities)} cities to cities.json")
+        File.write!("data/cities.json", json)
+        Logger.info("Successfully saved #{length(cities)} cities to data/cities.json")
 
       {:error, reason} ->
         Logger.error("Failed to fetch cities: #{inspect(reason)}")
