@@ -22,10 +22,20 @@ defmodule FetchSubdistricts do
           case WilayahElixir.RajaOngkir.get_subdistricts(city["city_id"]) do
             {:ok, response} ->
               subdistricts = response["rajaongkir"]["results"]
-              # Add address field to each subdistrict
+              # Add address and coordinates to each subdistrict
               Enum.map(subdistricts, fn subdistrict ->
                 address = "#{subdistrict["subdistrict_name"]}, #{city["city_name"]}, #{city["province"]}"
-                Map.put(subdistrict, "address", address)
+                location = %{
+                  kecamatan: subdistrict["subdistrict_name"],
+                  kota: city["city_name"],
+                  provinsi: city["province"]
+                }
+                {latitude, longitude} = WilayahElixir.Coordinates.get_coordinates(location)
+
+                subdistrict
+                |> Map.put("address", address)
+                |> Map.put("latitude", latitude)
+                |> Map.put("longitude", longitude)
               end)
             {:error, reason} ->
               Logger.error("Failed to fetch subdistricts for city #{city["city_name"]}: #{inspect(reason)}")
